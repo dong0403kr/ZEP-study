@@ -1,0 +1,96 @@
+<html>
+<head>
+<style>
+  #layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #stopwatch {
+    font-size: 40px;
+    color: #ffffff;
+    width : 200px;
+    height: 60px;
+    background-color: rgba(0,0,0,0.7);
+    border-width: 3px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #time {
+    padding-bottom: 4px;
+    font-weight: 800;
+  }
+</style>
+<script>
+  var timer;
+  var ms = 0;
+  var s = 0;
+  var m = 0;
+
+  function start() {
+    timer = setInterval(run, 10); // run the function every 10 ms
+  }
+
+  function run() {
+    ms++; // increment the milliseconds
+    if (ms == 100) { // if milliseconds reach 100
+      ms = 0; // reset milliseconds to zero
+      s++; // increment seconds
+    }
+    if (s == 60) { // if seconds reach 60
+      s = 0; // reset seconds to zero
+      m++; // increment minutes
+    }
+    display(); // update the stopwatch display
+  }
+
+  function stop() {
+    clearInterval(timer); // stop the timer
+  }
+
+  function reset() {
+    stop(); // stop the timer
+    ms = 0; // reset milliseconds to zero
+    s = 0; // reset seconds to zero
+    m = 0; // reset minutes to zero
+    display(); // update the stopwatch display
+  }
+
+  function display() {
+    var msStr = ms < 10 ? "0" + ms : ms; // add a leading zero if ms is less than 10
+    var sStr = s < 10 ? "0" + s : s; // add a leading zero if s is less than 10
+    var mStr = m < 10 ? "0" + m : m; // add a leading zero if m is less than 10
+    document.getElementById("time").innerHTML = mStr + ":" + sStr + ":" + msStr; // display the stopwatch in mm:ss:ms format
+  }
+
+  window.addEventListener("message", function (e){
+    let state = e.data.state;
+    if(state=="start") {
+      reset();
+      start();
+    }
+    if(state=="stop") {
+      stop();
+    }
+    if(state=="reset") {
+      reset();
+    }
+  });
+
+</script>
+</head>
+<body>
+<div id="layout">
+  <div id="stopwatch">
+    <div id="time" >
+      00:00:00
+    </div>
+  </div>
+</div> <!-- the stopwatch display -->
+</body>
+</html>
